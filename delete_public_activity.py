@@ -26,18 +26,24 @@ while True:
     try:
         public_activity_delete_unlike_removereaction_button = driver.find_element_by_xpath("//img[@src='https://static.xx.fbcdn.net/rsrc.php/v3/yp/r/--soLpMIbaJ.png']/../../../following-sibling::div/span/a[contains(text(),'Delete') or contains(text(), 'Unlike') or contains(text(), 'Remove Reaction')]")
     except:
-        print("did not find any public activity on page")
-        load_more_button = driver.find_element_by_xpath("//h3[contains(text(), 'Load more from')]")
-        time.sleep(1)
-        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'});", load_more_button)
-        time.sleep(2)
-        driver.execute_script("arguments[0].click();", load_more_button)
-        time.sleep(6)
+        print("did not find any public activity on page -> loading more")
+        try:
+            load_more_button = driver.find_element_by_xpath("//h3[contains(text(), 'Load more from')]")
+        except:
+            print("the load more button is not here -> going to previous month")
+            next_years_data = driver.find_element_by_xpath("//a[contains(text(), 'This Month')]/../following-sibling::div/a")
+            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'});", next_years_data)
+            time.sleep(1)
+            driver.execute_script("arguments[0].click();", next_years_data)
+        else:
+            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'});", load_more_button)
+            time.sleep(1)
+            driver.execute_script("arguments[0].click();", load_more_button)
     else:
-        time.sleep(2)
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'});", public_activity_delete_unlike_removereaction_button)
         time.sleep(1)
         driver.execute_script("arguments[0].click();", public_activity_delete_unlike_removereaction_button)
+    finally:
         time.sleep(4)
 
 driver.quit() 
